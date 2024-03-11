@@ -2,36 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-  
   <title>Frontend Mentor | Age calculator app</title>
-
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,700;1,400;1,800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  Day
-  DD
-
-  Month
-  MM
-
-  Year
-  YYYY
-
-  -- years
-  -- months
-  -- days
-  
+  <!-- main -->
+  <main>
+    <!-- section -->
+    <section class="date-input-section">
+      <!--  form -->
+      <form class="date-form">
+        <div class="form-section">
+          <div class="form-titles-and-inputs">
+            <label for="day">day</label>
+            <input type="number" name="day" id="day" min="1" placeholder="DD" required>
+          </div>
+          <div class="form-titles-and-inputs">
+            <label for="month">month</label>
+            <input type="number" name="month" id="month" min="1" max="12" placeholder="MM" required>
+          </div>
+          <div class="form-titles-and-inputs">
+            <label for="year">year</label>
+            <input type="number" name="year" id="year" placeholder="YYYY" required>
+          </div>
+        </div>
+        <!-- button -->
+        <div>
+          <hr>
+          <input type="submit" value="arrow">
+        </div>
+      </form>
+    </section>
+    <!-- section flex column -->
+    <section class="time-result">
+      <div><span class="ind-result" id="year-result">--</span>&nbsp;<span class="time-text" id="year-text">years</span></div>
+      <div><span class="ind-result" id="month-result">--</span>&nbsp;<span class="time-text" id="month-text">months</span></div>
+      <div><span class="ind-result" id="day-result">--</span>&nbsp;<span class="time-text" id="day-text">days</span></div>
+    </section>
+  </main>
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
     Coded by <a href="https://www.adamraffertywebdesign.com/">Adam Rafferty</a>.
   </div>
 </body>
+<script src="main.js"></script>
 </html>
