@@ -16,17 +16,54 @@ const todayDate = new Date(dateNow).getDate()
 // stops future dates being input
 yearInput.setAttribute('max', thisYear)
 
-yearInput.addEventListener('change', () => {
-  if (Number(yearInput.value) === thisYear) {
-    monthInput.setAttribute('max', thisMonth + 1)
-    dayInput.setAttribute('max', todayDate)
-  } else {
-    monthInput.setAttribute('max', 12)
-    dayInput.setAttribute('max', 31)
-  }
-})
+function checkThisYear() {
+  yearInput.addEventListener('change', () => {
+    const yearNum = Number(yearInput.value)
+    if (yearNum === thisYear) {
+      monthInput.setAttribute('max', thisMonth + 1)
+    } else {
+      monthInput.setAttribute('max', 12)
+      checkDaysInMonth()
+    }
+  })
+}
+checkThisYear()
 
-// * https://www.30secondsofcode.org/js/s/days-in-month/
+// Need to account for which dates exist - leap years, certain months have 30 or 31
+// - APR, JUN, SEP, NOV - 30 days
+// - Rest 31 days
+// - FEB 28 days, or Leap Year 29 days
+
+function checkDaysInMonth() {
+  monthInput.addEventListener('change', () => {
+    const yearNum = Number(yearInput.value)
+    const monthNum = Number(monthInput.value)
+    if ((yearNum === thisYear) && (monthNum === thisMonth + 1) ) {
+      dayInput.setAttribute('max', todayDate)
+    } else if (monthNum === 4 | monthNum === 6 | monthNum === 9 | monthNum === 11) {
+      dayInput.setAttribute('max', 30)
+    } else {
+      dayInput.setAttribute('max', 31)
+    }
+  })
+}
+checkDaysInMonth()
+
+//  If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
+// %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
+function leapYear() {
+  dateForm.addEventListener('change', () => {
+    const yearNum = Number(yearInput.value)
+    const monthNum = Number(monthInput.value)
+    if (monthNum === 2 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0))) {
+      dayInput.setAttribute('max', 29)
+    } else if (monthNum === 2 && ((yearNum % 4 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 !== 0))) {
+      dayInput.setAttribute('max', 28)
+    }
+  })
+}
+leapYear()
+
 const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 
 dateForm.addEventListener('submit', (e) => {
@@ -34,6 +71,9 @@ dateForm.addEventListener('submit', (e) => {
   const inputYear = yearInput.value
   const inputDay = dayInput.value
   const inputMonth = monthInput.value
+  // ! if field is empty 
+  // !- add styling red border
+  // !- add red html text below (hide/unhide)
   getResults(inputDay, inputMonth, inputYear)
 })
 
@@ -55,7 +95,7 @@ function getResults(inputDay, inputMonth, inputYear) {
   // days
   const prevMonthLength = daysInMonth(thisYear, thisMonth)
   const dayRes = inputDay < todayDate ? todayDate - inputDay : (prevMonthLength - inputDay) + todayDate
-  // correct wording for amounts
+  // corrects wording for amounts
   yearRes === 1 ? yearText.innerText = 'year' : yearText.innerText = 'years'
   monthRes === 1 ? monthText.innerText = 'month' : monthText.innerText = 'months'
   dayRes === 1 ? dayText.innerText = 'day' : dayText.innerText = 'days'
@@ -79,6 +119,5 @@ function getResults(inputDay, inputMonth, inputYear) {
     thisMonth + 1 !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
     // * Day
     todayDate === Number(inputDay) ? dayResult.innerText = 0 : dayResult.innerText = dayRes
-    // console.log('less than 12 months')
   }
 }
