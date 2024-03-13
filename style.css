@@ -44,12 +44,11 @@ body {
 
 main {
   background-color: var(--white);
-  width: 60%;
-  height: 50%;
+  width: 500px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
   border-radius: 20px;
   border-bottom-right-radius: 160px;
   padding: 40px;
@@ -79,6 +78,12 @@ main {
   font-size: 32px;
   padding: 10px;
   width: 90px;
+  cursor: pointer;
+}
+
+.inputBoxes:focus {
+  outline: none !important;
+  border: 1px var(--purple) solid;
 }
 
 .inputLabels {
@@ -109,10 +114,16 @@ input[type="submit"] {
   position: absolute;
   top: -30px;
   right: 0;
+  cursor: pointer;
 }
 
 path {
   fill: var(--purple);
+  transition: 0.1s ease-in-out;
+}
+
+path:hover {
+  fill: var(--off-black);
 }
 
 /* Removes increment buttons from number fields */
@@ -172,4 +183,70 @@ input::-webkit-inner-spin-button {
   bottom: 0;
   padding: 15px;
   font-size: 10px;
+}
+
+@media (max-width: 680px) {
+  
+  /* main width smaller */
+  /* main height taller */
+  main {
+    width: 340px;
+    padding: 30px 10px 0 10px;
+    border-radius: 20px;
+    border-bottom-right-radius: 120px;
+    height: 420px;
+  }
+
+  /* input boxes width larger */
+  .date-input-section {
+    width: 90%;
+  }
+  
+  .form-section {
+    width: 100%;
+  }
+  
+  .form-titles-and-inputs {
+    width: 28%;
+    align-items: center;
+  }
+  
+  .inputBoxes {
+    font-size: 20px;
+    padding: 10px 0 10px 10px;
+    width: 88%;
+  }
+
+  .inputLabels {
+    align-self: flex-start;
+    font-size: 10px;
+  }
+
+  /* move button to middle, reduce hr */
+  hr {
+    width: 100%;
+  }
+
+  .submit-btn-svg {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+
+
+  .time-result {
+    width: 90%;
+    height: 60%;
+    font-size: 50px;
+    line-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: flex-start;
+  }
+  
+  /* Result numbers */
+  .ind-result {
+    font-size: 55px;
+  }
 }

@@ -19,10 +19,9 @@ const inputLabels = document.querySelectorAll('.inputLabels')
 const requiredMsg = document.querySelectorAll('.requiredMsg')
 
 const submitButton = document.getElementById('submit-btn')
-
 const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 
-// Need to account for which dates exist - leap years, certain months have 30 or 31
+// Need to account for which dates exist - leap years, months have 30 or 31 days
 // - APR, JUN, SEP, NOV - 30 days
 // - Rest 31 days
 // - FEB 28 days, or Leap Year 29 days
@@ -99,7 +98,7 @@ function checkDaysInMonth() {
       requiredMsg[0].innerText = 'Must be a valid day'
       submitButton.disabled = true
     } else if (monthNum === 2) {
-      //  If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
+      // If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
       // %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
       // Leap Year
       if (yearNum !== 0 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) && dayNum > 29) {
@@ -173,50 +172,8 @@ function checkDaysInMonth() {
 }
 checkDaysInMonth()
 
-// ! Delete
-// function leapYear() {
-//   dateForm.addEventListener('change', (e) => {
-//     const yearNum = Number(yearInput.value)
-//     const monthNum = Number(monthInput.value)
-//     const dayNum = Number(dayInput.value)
-//     if (monthNum === 2 && dayNum > 29 && (yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) {
-//       // dayInput.setAttribute('max', 29)
-//     // if (dayNum > 29) {
-//       inputBoxes[0].classList.add('error-box')
-//       inputLabels[0].classList.add('error-color')
-//       requiredMsg[0].classList.remove('hideMsg')
-//       requiredMsg[0].classList.add('error-color')
-//       requiredMsg[0].innerText = 'Must be a valid date'
-//       console.log('29')
-//       // }
-//     } else if (monthNum === 2 && dayNum > 28) {
-//       // dayInput.setAttribute('max', 28)
-//       // if (dayNum > 28) {
-//       inputBoxes[0].classList.add('error-box')
-//       inputLabels[0].classList.add('error-color')
-//       requiredMsg[0].classList.remove('hideMsg')
-//       requiredMsg[0].classList.add('error-color')
-//       requiredMsg[0].innerText = 'Must be a valid date'
-//       console.log('28')
-//       // }
-//     } else {
-//       for (e of inputBoxes) {
-//         e.classList.remove('error-box')
-//       } 
-//       for (e of inputLabels) {
-//         e.classList.remove('error-color')
-//       }
-//       for (e of requiredMsg) {
-//         e.classList.add('hideMsg')
-//         e.classList.remove('error-color')
-//         e.innerText = ''
-//       }
-//     }
-//   })
-// }
-// leapYear()
-
 function getResults(inputDay, inputMonth, inputYear) {
+  // const leapDays = getLeapDays()
   const dd = inputDay.length < 2 ? `0${inputDay}` : `${inputDay}`
   const mm = inputMonth.length < 2 ? `0${inputMonth}` : `${inputMonth}`
   const date = `${inputYear}-${mm}-${dd}T00:00:01`
@@ -225,8 +182,8 @@ function getResults(inputDay, inputMonth, inputYear) {
   const daysPassed = Math.floor(diff / (1000 * 60 * 60 * 24))
   // year
   const yearRes = Math.floor(daysPassed / 365)
-  const leapYr = Math.floor(yearRes / 4)
-  const leftOver = (daysPassed - (yearRes * 365)) - leapYr
+  const leftOver = (daysPassed - (yearRes * 365)) 
+
   // months
   // months are an array so Jan starts at 0
   const birthMonth = new Date(date).getMonth() + 1
@@ -239,6 +196,43 @@ function getResults(inputDay, inputMonth, inputYear) {
     }
   }
   const monthRes = lessThanMonth()
+
+  // function getLeapDays() {
+  //   const pastYr = thisYear - 1
+  //   const pastYrTwo = thisYear - 2
+  //   if ((thisYear % 4 === 0 && thisYear % 100 !== 0) || (thisYear % 4 === 0 && thisYear % 100 === 0 && thisYear % 400 === 0)) {
+  //     if (thisMonth > 2 && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29)) {
+  //       return Math.floor((thisYear - Number(inputYear)) / 4) + 2
+  //     } else if ((thisMonth > 2 && Number(inputMonth) > 2) 
+  //     || 
+  //     ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29))) {
+  //       return Math.floor((thisYear - Number(inputYear)) / 4) + 1
+  //     } else if ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && Number(inputMonth) > 2) {
+  //       return Math.floor((thisYear - Number(inputYear)) / 4)
+  //     }
+  //   } else if ((pastYr % 4 === 0 && pastYr % 100 !== 0) || (pastYr % 4 === 0 && pastYr % 100 === 0 && pastYr % 400 === 0)) {
+  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+  //       return Math.floor(((thisYear - 1) - Number(inputYear)) / 4) + 1
+  //     } else {
+  //       return Math.floor(((thisYear - 1) - Number(inputYear)) / 4)
+  //     }
+  //   } else if ((pastYrTwo % 4 === 0 && pastYrTwo % 100 !== 0) || (pastYrTwo % 4 === 0 && pastYrTwo % 100 === 0 && pastYrTwo % 400 === 0)) {
+  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+  //       return Math.floor(((thisYear - 2) - Number(inputYear)) / 4) + 1
+  //     } else {
+  //       return Math.floor(((thisYear - 2) - Number(inputYear)) / 4)
+  //     }
+  //   } else {
+  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+  //       return Math.floor(((thisYear - 3) - Number(inputYear)) / 4) + 1
+  //     } else {
+  //       return Math.floor(((thisYear - 3) - Number(inputYear)) / 4)
+  //     }
+  //   }
+  // }
+  // getLeapDays()
+
+  
 
   // days
   const prevMonthLength = daysInMonth(thisYear, thisMonth - 1)
