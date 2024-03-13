@@ -10,7 +10,7 @@ const monthInput = document.getElementById('month')
 const dayInput = document.getElementById('day')
 const dateNow = Date.now()
 const thisYear = new Date(dateNow).getFullYear()
-const thisMonth = new Date(dateNow).getMonth()
+const thisMonth = new Date(dateNow).getMonth() + 1
 const todayDate = new Date(dateNow).getDate()
 
 // elements to target for errors
@@ -137,7 +137,6 @@ function checkDaysInMonth() {
           e.classList.remove('error-color')
           e.innerText = ''
         }
-        // ! remove rule
         submitButton.disabled = false
       }
     } else if (dayNum > 31) {
@@ -168,9 +167,7 @@ function checkDaysInMonth() {
         e.classList.remove('error-color')
         e.innerText = ''
       }
-      // ! remove rule
       submitButton.disabled = false
-      // runChecks()
     }
   })
 }
@@ -232,10 +229,19 @@ function getResults(inputDay, inputMonth, inputYear) {
   const leftOver = (daysPassed - (yearRes * 365)) - leapYr
   // months
   // months are an array so Jan starts at 0
-  const birthMonth = new Date(date).getMonth()
-  const monthRes = thisMonth - birthMonth < 0 ? 12 - (thisMonth - birthMonth) * -1 : thisMonth - birthMonth
+  const birthMonth = new Date(date).getMonth() + 1
+  // Accounts for dates later in the month than present date, won't need to add extra month on results
+  function lessThanMonth() {
+    if (Number(inputDay) > todayDate) {
+      return thisMonth - birthMonth < 0 ? (12 - (thisMonth - birthMonth) * -1) - 1 : (thisMonth - birthMonth) - 1
+    } else {
+      return thisMonth - birthMonth < 0 ? 12 - (thisMonth - birthMonth) * -1 : thisMonth - birthMonth
+    }
+  }
+  const monthRes = lessThanMonth()
+
   // days
-  const prevMonthLength = daysInMonth(thisYear, thisMonth)
+  const prevMonthLength = daysInMonth(thisYear, thisMonth - 1)
   const dayRes = Number(inputDay) < todayDate ? todayDate - Number(inputDay) : (prevMonthLength - Number(inputDay)) + todayDate
   // corrects wording for amounts
   yearRes === 1 ? yearText.innerText = 'year' : yearText.innerText = 'years'
@@ -247,7 +253,7 @@ function getResults(inputDay, inputMonth, inputYear) {
     thisYear === Number(inputYear) ? yearResult.innerText = 0 : yearResult.innerText = yearRes
     if (leftOver > 0) {
       // * Month
-      thisMonth + 1 !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
+      thisMonth !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
       // * Day
       todayDate === Number(inputDay) ? dayResult.innerText = 0 : dayResult.innerText = dayRes
     } else {
@@ -258,7 +264,7 @@ function getResults(inputDay, inputMonth, inputYear) {
     // * Year
     yearResult.innerText = 0
     // * Month
-    thisMonth + 1 !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
+    thisMonth !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
     // * Day
     todayDate === Number(inputDay) ? dayResult.innerText = 0 : dayResult.innerText = dayRes
   }
