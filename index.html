@@ -19,22 +19,36 @@
       <form class="date-form">
         <div class="form-section">
           <div class="form-titles-and-inputs">
-            <label for="day">day</label>
-            <input type="number" name="day" id="day" min="1" placeholder="DD" required>
+            <label class="inputLabels" for="day">day</label>
+            <input class="inputBoxes" type="number" name="day" id="day" min="1" placeholder="DD">
+            <div class="requiredMsgBox">
+              <p class="hideMsg requiredMsg"></p>
+            </div>
           </div>
           <div class="form-titles-and-inputs">
-            <label for="month">month</label>
-            <input type="number" name="month" id="month" min="1" max="12" placeholder="MM" required>
+            <label class="inputLabels" for="month">month</label>
+            <input class="inputBoxes" type="number" name="month" id="month" min="1" placeholder="MM">
+            <div class="requiredMsgBox">
+              <p class="hideMsg requiredMsg"></p>
+            </div>
           </div>
           <div class="form-titles-and-inputs">
-            <label for="year">year</label>
-            <input type="number" name="year" id="year" placeholder="YYYY" required>
+            <label class="inputLabels" for="year">year</label>
+            <input class="inputBoxes" type="number" name="year" id="year" placeholder="YYYY">
+            <div class="requiredMsgBox">
+              <p class="hideMsg requiredMsg"></p>
+            </div>
           </div>
         </div>
         <!-- button -->
-        <div>
+        <div class="mid-line-button">
           <hr>
-          <input type="submit" value="arrow">
+          <label>
+            <input id="submit-btn" type="submit" />
+            <svg class="submit-btn-svg" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m2.005 12.002c0-5.517 4.48-9.997 9.997-9.997 5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998zm6.21 1.524s1.505 1.501 3.259 3.254c.147.147.338.22.53.22s.384-.073.531-.22c1.753-1.752 3.258-3.254 3.258-3.254.145-.145.217-.335.216-.526 0-.192-.074-.384-.22-.53-.293-.293-.766-.295-1.057-.004l-1.978 1.977v-6.693c0-.414-.336-.75-.75-.75s-.75.336-.75.75v6.693l-1.978-1.978c-.289-.289-.762-.287-1.055.006-.146.147-.22.339-.221.53s.071.38.215.525z" fill-rule="nonzero"/>
+            </svg>
+          </label>
         </div>
       </form>
     </section>

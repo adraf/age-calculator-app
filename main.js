@@ -13,69 +13,211 @@ const thisYear = new Date(dateNow).getFullYear()
 const thisMonth = new Date(dateNow).getMonth()
 const todayDate = new Date(dateNow).getDate()
 
-// stops future dates being input
-yearInput.setAttribute('max', thisYear)
+// elements to target for errors
+const inputBoxes = document.querySelectorAll('.inputBoxes')
+const inputLabels = document.querySelectorAll('.inputLabels')
+const requiredMsg = document.querySelectorAll('.requiredMsg')
 
-function checkThisYear() {
-  yearInput.addEventListener('change', () => {
-    const yearNum = Number(yearInput.value)
-    if (yearNum === thisYear) {
-      monthInput.setAttribute('max', thisMonth + 1)
-    } else {
-      monthInput.setAttribute('max', 12)
-      checkDaysInMonth()
-    }
-  })
-}
-checkThisYear()
+const submitButton = document.getElementById('submit-btn')
+
+const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 
 // Need to account for which dates exist - leap years, certain months have 30 or 31
 // - APR, JUN, SEP, NOV - 30 days
 // - Rest 31 days
 // - FEB 28 days, or Leap Year 29 days
 
+function runChecks() {
+  dateForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const inputYear = yearInput.value
+    const inputDay = dayInput.value
+    const inputMonth = monthInput.value
+    if (inputYear === '' || inputMonth === '' || inputDay === '') { 
+      for (e of inputBoxes) {
+        e.classList.add('error-box')
+      } 
+      for (e of inputLabels) {
+        e.classList.add('error-color')
+      }
+      for (e of requiredMsg) {
+        e.classList.remove('hideMsg')
+        e.classList.add('error-color')
+        e.innerText = 'This field is required'
+      }
+    } else {
+      for (e of inputBoxes) {
+        e.classList.remove('error-box')
+      } 
+      for (e of inputLabels) {
+        e.classList.remove('error-color')
+      }
+      for (e of requiredMsg) {
+        e.classList.add('hideMsg')
+        e.classList.remove('error-color')
+        e.innerText = ''
+      }
+      getResults(inputDay, inputMonth, inputYear)
+    }
+  })
+}
+runChecks()
+
 function checkDaysInMonth() {
-  monthInput.addEventListener('change', () => {
+  dateForm.addEventListener('change', (e) => {
     const yearNum = Number(yearInput.value)
     const monthNum = Number(monthInput.value)
-    if ((yearNum === thisYear) && (monthNum === thisMonth + 1) ) {
-      dayInput.setAttribute('max', todayDate)
-    } else if (monthNum === 4 | monthNum === 6 | monthNum === 9 | monthNum === 11) {
-      dayInput.setAttribute('max', 30)
+    const dayNum = Number(dayInput.value)
+    if (yearNum !== 0 && yearInput.value.length !== 4) {
+      // Valid year entry
+      inputBoxes[2].classList.add('error-box')
+      inputLabels[2].classList.add('error-color')
+      requiredMsg[2].classList.add('error-color')
+      requiredMsg[2].classList.remove('hideMsg')
+      requiredMsg[2].innerText = 'Must be a valid year'
+      submitButton.disabled = true
+    } else if (yearNum > thisYear || yearNum === thisYear && (monthNum === thisMonth + 1 && dayNum > todayDate || monthNum > thisMonth + 1)) {
+      // No future dates
+      for (e of inputBoxes) {
+        e.classList.add('error-box')
+      } 
+      for (e of inputLabels) {
+        e.classList.add('error-color')
+      }
+      for (e of requiredMsg) {
+        e.classList.remove('hideMsg')
+        e.classList.add('error-color')
+        e.innerText = 'Must be in the past'
+      }
+      submitButton.disabled = true
+    } else if ((monthNum === 4 || monthNum === 6 || monthNum === 9 || monthNum === 11) && dayNum > 30) {
+      // Months with 30 days
+      inputBoxes[0].classList.add('error-box')
+      inputLabels[0].classList.add('error-color')
+      requiredMsg[0].classList.add('error-color')
+      requiredMsg[0].classList.remove('hideMsg')
+      requiredMsg[0].innerText = 'Must be a valid day'
+      submitButton.disabled = true
+    } else if (monthNum === 2) {
+      //  If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
+      // %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
+      // Leap Year
+      if (yearNum !== 0 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) && dayNum > 29) {
+        inputBoxes[0].classList.add('error-box')
+        inputLabels[0].classList.add('error-color')
+        requiredMsg[0].classList.remove('hideMsg')
+        requiredMsg[0].classList.add('error-color')
+        requiredMsg[0].innerText = 'Must be a valid date'
+        submitButton.disabled = true
+      // Normal Year
+      } else if (yearNum !== 0 && ((yearNum % 4 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 !== 0)) && dayNum > 28) {
+        inputBoxes[0].classList.add('error-box')
+        inputLabels[0].classList.add('error-color')
+        requiredMsg[0].classList.remove('hideMsg')
+        requiredMsg[0].classList.add('error-color')
+        requiredMsg[0].innerText = 'Must be a valid date'
+        submitButton.disabled = true
+      // Generic Feb rule
+      } else if (dayNum > 29) {
+        inputBoxes[0].classList.add('error-box')
+        inputLabels[0].classList.add('error-color')
+        requiredMsg[0].classList.remove('hideMsg')
+        requiredMsg[0].classList.add('error-color')
+        requiredMsg[0].innerText = 'Must be a valid date'
+        submitButton.disabled = true
+      } else {
+        for (e of inputBoxes) {
+          e.classList.remove('error-box')
+        } 
+        for (e of inputLabels) {
+          e.classList.remove('error-color')
+        }
+        for (e of requiredMsg) {
+          e.classList.add('hideMsg')
+          e.classList.remove('error-color')
+          e.innerText = ''
+        }
+        // ! remove rule
+        submitButton.disabled = false
+      }
+    } else if (dayNum > 31) {
+      // Rest of the months with 31 days
+      inputBoxes[0].classList.add('error-box')
+      inputLabels[0].classList.add('error-color')
+      requiredMsg[0].classList.add('error-color')
+      requiredMsg[0].classList.remove('hideMsg')
+      requiredMsg[0].innerText = 'Must be a valid day'
+      submitButton.disabled = true
+    } else if (monthNum > 12) {
+      // Valid month
+      inputBoxes[1].classList.add('error-box')
+      inputLabels[1].classList.add('error-color')
+      requiredMsg[1].classList.add('error-color')
+      requiredMsg[1].classList.remove('hideMsg')
+      requiredMsg[1].innerText = 'Must be a valid month'
+      submitButton.disabled = true
     } else {
-      dayInput.setAttribute('max', 31)
+      for (e of inputBoxes) {
+        e.classList.remove('error-box')
+      } 
+      for (e of inputLabels) {
+        e.classList.remove('error-color')
+      }
+      for (e of requiredMsg) {
+        e.classList.add('hideMsg')
+        e.classList.remove('error-color')
+        e.innerText = ''
+      }
+      // ! remove rule
+      submitButton.disabled = false
+      // runChecks()
     }
   })
 }
 checkDaysInMonth()
 
-//  If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
-// %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
-function leapYear() {
-  dateForm.addEventListener('change', () => {
-    const yearNum = Number(yearInput.value)
-    const monthNum = Number(monthInput.value)
-    if (monthNum === 2 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0))) {
-      dayInput.setAttribute('max', 29)
-    } else if (monthNum === 2 && ((yearNum % 4 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 !== 0))) {
-      dayInput.setAttribute('max', 28)
-    }
-  })
-}
-leapYear()
-
-const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
-
-dateForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const inputYear = yearInput.value
-  const inputDay = dayInput.value
-  const inputMonth = monthInput.value
-  // ! if field is empty 
-  // !- add styling red border
-  // !- add red html text below (hide/unhide)
-  getResults(inputDay, inputMonth, inputYear)
-})
+// ! Delete
+// function leapYear() {
+//   dateForm.addEventListener('change', (e) => {
+//     const yearNum = Number(yearInput.value)
+//     const monthNum = Number(monthInput.value)
+//     const dayNum = Number(dayInput.value)
+//     if (monthNum === 2 && dayNum > 29 && (yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) {
+//       // dayInput.setAttribute('max', 29)
+//     // if (dayNum > 29) {
+//       inputBoxes[0].classList.add('error-box')
+//       inputLabels[0].classList.add('error-color')
+//       requiredMsg[0].classList.remove('hideMsg')
+//       requiredMsg[0].classList.add('error-color')
+//       requiredMsg[0].innerText = 'Must be a valid date'
+//       console.log('29')
+//       // }
+//     } else if (monthNum === 2 && dayNum > 28) {
+//       // dayInput.setAttribute('max', 28)
+//       // if (dayNum > 28) {
+//       inputBoxes[0].classList.add('error-box')
+//       inputLabels[0].classList.add('error-color')
+//       requiredMsg[0].classList.remove('hideMsg')
+//       requiredMsg[0].classList.add('error-color')
+//       requiredMsg[0].innerText = 'Must be a valid date'
+//       console.log('28')
+//       // }
+//     } else {
+//       for (e of inputBoxes) {
+//         e.classList.remove('error-box')
+//       } 
+//       for (e of inputLabels) {
+//         e.classList.remove('error-color')
+//       }
+//       for (e of requiredMsg) {
+//         e.classList.add('hideMsg')
+//         e.classList.remove('error-color')
+//         e.innerText = ''
+//       }
+//     }
+//   })
+// }
+// leapYear()
 
 function getResults(inputDay, inputMonth, inputYear) {
   const dd = inputDay.length < 2 ? `0${inputDay}` : `${inputDay}`
@@ -94,13 +236,13 @@ function getResults(inputDay, inputMonth, inputYear) {
   const monthRes = thisMonth - birthMonth < 0 ? 12 - (thisMonth - birthMonth) * -1 : thisMonth - birthMonth
   // days
   const prevMonthLength = daysInMonth(thisYear, thisMonth)
-  const dayRes = inputDay < todayDate ? todayDate - inputDay : (prevMonthLength - inputDay) + todayDate
+  const dayRes = Number(inputDay) < todayDate ? todayDate - Number(inputDay) : (prevMonthLength - Number(inputDay)) + todayDate
   // corrects wording for amounts
   yearRes === 1 ? yearText.innerText = 'year' : yearText.innerText = 'years'
   monthRes === 1 ? monthText.innerText = 'month' : monthText.innerText = 'months'
   dayRes === 1 ? dayText.innerText = 'day' : dayText.innerText = 'days'
 
-  if (daysPassed >= 365 || inputYear < thisYear) {
+  if (daysPassed >= 365 || Number(inputYear) < thisYear) {
     // * Year
     thisYear === Number(inputYear) ? yearResult.innerText = 0 : yearResult.innerText = yearRes
     if (leftOver > 0) {
@@ -112,7 +254,7 @@ function getResults(inputDay, inputMonth, inputYear) {
       monthResult.innerText = 0
       dayResult.innerText = 0
     }
-  } else if (daysPassed < 365 || inputYear === thisYear) {
+  } else if (daysPassed < 365 || Number(inputYear) === thisYear) {
     // * Year
     yearResult.innerText = 0
     // * Month
