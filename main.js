@@ -30,8 +30,8 @@ function runChecks() {
   dateForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const inputYear = yearInput.value
-    const inputDay = dayInput.value
     const inputMonth = monthInput.value
+    const inputDay = dayInput.value
     if (inputYear === '' || inputMonth === '' || inputDay === '') { 
       for (e of inputBoxes) {
         e.classList.add('error-box')
@@ -173,12 +173,11 @@ function checkDaysInMonth() {
 checkDaysInMonth()
 
 function getResults(inputDay, inputMonth, inputYear) {
-  // const leapDays = getLeapDays()
   const dd = inputDay.length < 2 ? `0${inputDay}` : `${inputDay}`
   const mm = inputMonth.length < 2 ? `0${inputMonth}` : `${inputMonth}`
   const date = `${inputYear}-${mm}-${dd}T00:00:01`
-  const birthDate = new Date(date).getTime()
-  const diff = dateNow - birthDate
+  const userInputDate = new Date(date).getTime()
+  const diff = dateNow - userInputDate
   const daysPassed = Math.floor(diff / (1000 * 60 * 60 * 24))
   // year
   const yearRes = Math.floor(daysPassed / 365)
@@ -196,45 +195,9 @@ function getResults(inputDay, inputMonth, inputYear) {
     }
   }
   const monthRes = lessThanMonth()
-
-  // function getLeapDays() {
-  //   const pastYr = thisYear - 1
-  //   const pastYrTwo = thisYear - 2
-  //   if ((thisYear % 4 === 0 && thisYear % 100 !== 0) || (thisYear % 4 === 0 && thisYear % 100 === 0 && thisYear % 400 === 0)) {
-  //     if (thisMonth > 2 && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29)) {
-  //       return Math.floor((thisYear - Number(inputYear)) / 4) + 2
-  //     } else if ((thisMonth > 2 && Number(inputMonth) > 2) 
-  //     || 
-  //     ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29))) {
-  //       return Math.floor((thisYear - Number(inputYear)) / 4) + 1
-  //     } else if ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && Number(inputMonth) > 2) {
-  //       return Math.floor((thisYear - Number(inputYear)) / 4)
-  //     }
-  //   } else if ((pastYr % 4 === 0 && pastYr % 100 !== 0) || (pastYr % 4 === 0 && pastYr % 100 === 0 && pastYr % 400 === 0)) {
-  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-  //       return Math.floor(((thisYear - 1) - Number(inputYear)) / 4) + 1
-  //     } else {
-  //       return Math.floor(((thisYear - 1) - Number(inputYear)) / 4)
-  //     }
-  //   } else if ((pastYrTwo % 4 === 0 && pastYrTwo % 100 !== 0) || (pastYrTwo % 4 === 0 && pastYrTwo % 100 === 0 && pastYrTwo % 400 === 0)) {
-  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-  //       return Math.floor(((thisYear - 2) - Number(inputYear)) / 4) + 1
-  //     } else {
-  //       return Math.floor(((thisYear - 2) - Number(inputYear)) / 4)
-  //     }
-  //   } else {
-  //     if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-  //       return Math.floor(((thisYear - 3) - Number(inputYear)) / 4) + 1
-  //     } else {
-  //       return Math.floor(((thisYear - 3) - Number(inputYear)) / 4)
-  //     }
-  //   }
-  // }
-  // getLeapDays()
-
-  // days
   
   const prevMonthLength = daysInMonth(thisYear, thisMonth - 1)
+
   // Accounts for different lengths of months to give amount of days
   function getDays() {
     if (Number(inputDay) < todayDate) {
