@@ -100,7 +100,7 @@ main {
 }
 
 hr {
-  width: 90%;
+  width: 98%;
   float: left;
   border: 1px var(--light-grey) solid;
 }
@@ -115,6 +115,8 @@ input[type="submit"] {
   top: -30px;
   right: 0;
   cursor: pointer;
+  background-color: white;
+  border-radius: 50px;
 }
 
 path {
@@ -133,7 +135,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Warning */
+/* Error styling */
 .error-box {
   border: 1px var(--light-red) solid;
 }
@@ -176,6 +178,7 @@ input::-webkit-inner-spin-button {
   color: var(--off-black);
 }
 
+/* Footer */
 .attribution {
   font-weight: 400;
   font-style: italic;
@@ -185,10 +188,19 @@ input::-webkit-inner-spin-button {
   font-size: 10px;
 }
 
+.attribution a {
+  text-decoration: none;
+  color: var(--purple);
+  transition: 0.1s ease-in-out;
+}
+
+.attribution a:hover {
+  color: var(--smokey-grey);
+}
+
+
 @media (max-width: 680px) {
   
-  /* main width smaller */
-  /* main height taller */
   main {
     width: 340px;
     padding: 30px 10px 0 10px;
@@ -197,7 +209,6 @@ input::-webkit-inner-spin-button {
     height: 420px;
   }
 
-  /* input boxes width larger */
   .date-input-section {
     width: 90%;
   }
@@ -222,7 +233,6 @@ input::-webkit-inner-spin-button {
     font-size: 10px;
   }
 
-  /* move button to middle, reduce hr */
   hr {
     width: 100%;
   }
@@ -232,7 +242,6 @@ input::-webkit-inner-spin-button {
     right: 0;
     margin: 0 auto;
   }
-
 
   .time-result {
     width: 90%;
@@ -245,7 +254,6 @@ input::-webkit-inner-spin-button {
     align-content: flex-start;
   }
   
-  /* Result numbers */
   .ind-result {
     font-size: 55px;
   }

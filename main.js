@@ -232,11 +232,24 @@ function getResults(inputDay, inputMonth, inputYear) {
   // }
   // getLeapDays()
 
-  
-
   // days
+  
   const prevMonthLength = daysInMonth(thisYear, thisMonth - 1)
-  const dayRes = Number(inputDay) < todayDate ? todayDate - Number(inputDay) : (prevMonthLength - Number(inputDay)) + todayDate
+  // Accounts for different lengths of months to give amount of days
+  function getDays() {
+    if (Number(inputDay) < todayDate) {
+      return todayDate - Number(inputDay)
+    } else {
+      if ((prevMonthLength - Number(inputDay)) < 0) {
+        const posResult = (prevMonthLength - Number(inputDay)) * -1
+        return ((prevMonthLength - Number(inputDay)) + todayDate) + posResult
+      } else {
+        return (prevMonthLength - Number(inputDay)) + todayDate
+      }
+    }
+  }
+  const dayRes = getDays()
+
   // corrects wording for amounts
   yearRes === 1 ? yearText.innerText = 'year' : yearText.innerText = 'years'
   monthRes === 1 ? monthText.innerText = 'month' : monthText.innerText = 'months'
