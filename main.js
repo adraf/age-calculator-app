@@ -213,6 +213,19 @@ function getResults(inputDay, inputMonth, inputYear) {
   }
   const dayRes = getDays()
 
+  function runAnimation(finalNum, targetResult) {
+    for (let i = 0; i <= finalNum; i++) {
+      setTimeout(
+        (function(i) {
+          return function() {        
+            const result = i
+            targetResult.innerHTML = result
+          }
+        // time animation takes = total time (1000) % total number (finalNum)
+        })(i), i * (1000 / finalNum))
+    }
+  }
+
   // corrects wording for amounts
   yearRes === 1 ? yearText.innerText = 'year' : yearText.innerText = 'years'
   monthRes === 1 ? monthText.innerText = 'month' : monthText.innerText = 'months'
@@ -220,12 +233,12 @@ function getResults(inputDay, inputMonth, inputYear) {
 
   if (daysPassed >= 365 || Number(inputYear) < thisYear) {
     // * Year
-    thisYear === Number(inputYear) ? yearResult.innerText = 0 : yearResult.innerText = yearRes
+    thisYear === Number(inputYear) ? yearResult.innerText = 0 : runAnimation(yearRes, yearResult)
     if (leftOver > 0) {
       // * Month
-      thisMonth !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
+      thisMonth !== Number(inputMonth) ? runAnimation(monthRes, monthResult) : monthResult.innerText = 0
       // * Day
-      todayDate === Number(inputDay) ? dayResult.innerText = 0 : dayResult.innerText = dayRes
+      todayDate === Number(inputDay) ? dayResult.innerText = 0 : runAnimation(dayRes, dayResult)
     } else {
       monthResult.innerText = 0
       dayResult.innerText = 0
@@ -234,8 +247,8 @@ function getResults(inputDay, inputMonth, inputYear) {
     // * Year
     yearResult.innerText = 0
     // * Month
-    thisMonth !== Number(inputMonth) ? monthResult.innerText = monthRes : monthResult.innerText = 0
+    thisMonth !== Number(inputMonth) ? runAnimation(monthRes, monthResult) : monthResult.innerText = 0
     // * Day
-    todayDate === Number(inputDay) ? dayResult.innerText = 0 : dayResult.innerText = dayRes
+    todayDate === Number(inputDay) ? dayResult.innerText = 0 : runAnimation(dayRes, dayResult)
   }
 }

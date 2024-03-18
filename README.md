@@ -141,22 +141,22 @@ function checkDaysInMonth() {
       requiredMsg[2].innerText = 'Must be a valid year'
       submitButton.disabled = true
       ...
-    }})}
+}})}
 ```
 
 I also added in some tweaks as I had found bugs with user testing. For example as can be seen above I added in that the year would need to be 4 digits if the user had ignored the placeholder on the input box. There was also a bug where months would display with 1 more than they should if the date was less than a month away.
 
 ```js
 const birthMonth = new Date(date).getMonth() + 1
-  // Accounts for dates later in the month than present date, won't need to add extra month on results
-  function lessThanMonth() {
-    if (Number(inputDay) > todayDate) {
-      return thisMonth - birthMonth < 0 ? (12 - (thisMonth - birthMonth) * -1) - 1 : (thisMonth - birthMonth) - 1
-    } else {
-      return thisMonth - birthMonth < 0 ? 12 - (thisMonth - birthMonth) * -1 : thisMonth - birthMonth
-    }
+// Accounts for dates later in the month than present date, won't need to add extra month on results
+function lessThanMonth() {
+  if (Number(inputDay) > todayDate) {
+    return thisMonth - birthMonth < 0 ? (12 - (thisMonth - birthMonth) * -1) - 1 : (thisMonth - birthMonth) - 1
+  } else {
+    return thisMonth - birthMonth < 0 ? 12 - (thisMonth - birthMonth) * -1 : thisMonth - birthMonth
   }
-  const monthRes = lessThanMonth()
+}
+const monthRes = lessThanMonth()
 ```
 
 With everything working and having met the criteria of the brief for functionality I then carried on with the rest of the CSS styling to get the site pixel perfect, for both desktop and for mobile view too. 
@@ -195,47 +195,47 @@ As mentioned in [Useful Resources](#useful-resources) below, I found a diagram t
 
 ```js
 else if (monthNum === 2) {
-      // If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
-      // %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
-      // Leap Year
-      if (yearNum !== 0 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) && dayNum > 29) {
-        inputBoxes[0].classList.add('error-box')
-        inputLabels[0].classList.add('error-color')
-        requiredMsg[0].classList.remove('hideMsg')
-        requiredMsg[0].classList.add('error-color')
-        requiredMsg[0].innerText = 'Must be a valid date'
-        submitButton.disabled = true
-      // Normal Year
-      } else if (yearNum !== 0 && ((yearNum % 4 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 !== 0)) && dayNum > 28) {
-        inputBoxes[0].classList.add('error-box')
-        inputLabels[0].classList.add('error-color')
-        requiredMsg[0].classList.remove('hideMsg')
-        requiredMsg[0].classList.add('error-color')
-        requiredMsg[0].innerText = 'Must be a valid date'
-        submitButton.disabled = true
-      // Generic Feb rule
-      } else if (dayNum > 29) {
-        inputBoxes[0].classList.add('error-box')
-        inputLabels[0].classList.add('error-color')
-        requiredMsg[0].classList.remove('hideMsg')
-        requiredMsg[0].classList.add('error-color')
-        requiredMsg[0].innerText = 'Must be a valid date'
-        submitButton.disabled = true
-      } else {
-        for (e of inputBoxes) {
-          e.classList.remove('error-box')
-        } 
-        for (e of inputLabels) {
-          e.classList.remove('error-color')
-        }
-        for (e of requiredMsg) {
-          e.classList.add('hideMsg')
-          e.classList.remove('error-color')
-          e.innerText = ''
-        }
-        submitButton.disabled = false
-      }
-      ...
+  // If a year is a leap yr and month === 2 then set days to 29, else month === 2, set days to 28
+  // %4 yes -> %100 no = leap year || %4 yes -> %100 yes -> %400 yes = leap year 
+  // Leap Year
+  if (yearNum !== 0 && ((yearNum % 4 === 0 && yearNum % 100 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 === 0)) && dayNum > 29) {
+    inputBoxes[0].classList.add('error-box')
+    inputLabels[0].classList.add('error-color')
+    requiredMsg[0].classList.remove('hideMsg')
+    requiredMsg[0].classList.add('error-color')
+    requiredMsg[0].innerText = 'Must be a valid date'
+    submitButton.disabled = true
+  // Normal Year
+  } else if (yearNum !== 0 && ((yearNum % 4 !== 0) || (yearNum % 4 === 0 && yearNum % 100 === 0 && yearNum % 400 !== 0)) && dayNum > 28) {
+    inputBoxes[0].classList.add('error-box')
+    inputLabels[0].classList.add('error-color')
+    requiredMsg[0].classList.remove('hideMsg')
+    requiredMsg[0].classList.add('error-color')
+    requiredMsg[0].innerText = 'Must be a valid date'
+    submitButton.disabled = true
+  // Generic Feb rule
+  } else if (dayNum > 29) {
+    inputBoxes[0].classList.add('error-box')
+    inputLabels[0].classList.add('error-color')
+    requiredMsg[0].classList.remove('hideMsg')
+    requiredMsg[0].classList.add('error-color')
+    requiredMsg[0].innerText = 'Must be a valid date'
+    submitButton.disabled = true
+  } else {
+    for (e of inputBoxes) {
+      e.classList.remove('error-box')
+    } 
+    for (e of inputLabels) {
+      e.classList.remove('error-color')
+    }
+    for (e of requiredMsg) {
+      e.classList.add('hideMsg')
+      e.classList.remove('error-color')
+      e.innerText = ''
+    }
+    submitButton.disabled = false
+  }
+  ...
 }
 ```
 
@@ -252,41 +252,65 @@ const thisMonth = new Date(dateNow).getMonth() + 1
 const todayDate = new Date(dateNow).getDate()
 
 function getLeapDays(thisYear) {
-    const pastYr = thisYear - 1
-    const pastYrTwo = thisYear - 2
-    // present year
-    if ((thisYear % 4 === 0 && thisYear % 100 !== 0) || (thisYear % 4 === 0 && thisYear % 100 === 0 && thisYear % 400 === 0)) {
-      if (thisMonth > 2 && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29)) {
-        return Math.floor((thisYear - Number(inputYear)) / 4) + 2
-      } else if ((thisMonth > 2 && Number(inputMonth) > 2) || ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29))) {
-        return Math.floor((thisYear - Number(inputYear)) / 4) + 1
-      } else if ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && Number(inputMonth) > 2) {
-        return Math.floor((thisYear - Number(inputYear)) / 4)
-      }
-    // last year
-    } else if ((pastYr % 4 === 0 && pastYr % 100 !== 0) || (pastYr % 4 === 0 && pastYr % 100 === 0 && pastYr % 400 === 0)) {
-      if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-        return Math.floor(((thisYear - 1) - Number(inputYear)) / 4) + 1
-      } else {
-        return Math.floor(((thisYear - 1) - Number(inputYear)) / 4)
-      }
-    // two years ago
-    } else if ((pastYrTwo % 4 === 0 && pastYrTwo % 100 !== 0) || (pastYrTwo % 4 === 0 && pastYrTwo % 100 === 0 && pastYrTwo % 400 === 0)) {
-      if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-        return Math.floor(((thisYear - 2) - Number(inputYear)) / 4) + 1
-      } else {
-        return Math.floor(((thisYear - 2) - Number(inputYear)) / 4)
-      }
-    // will be a Leap Year if not found already
+  const pastYr = thisYear - 1
+  const pastYrTwo = thisYear - 2
+  // present year
+  if ((thisYear % 4 === 0 && thisYear % 100 !== 0) || (thisYear % 4 === 0 && thisYear % 100 === 0 && thisYear % 400 === 0)) {
+    if (thisMonth > 2 && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29)) {
+      return Math.floor((thisYear - Number(inputYear)) / 4) + 2
+    } else if ((thisMonth > 2 && Number(inputMonth) > 2) || ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29))) {
+      return Math.floor((thisYear - Number(inputYear)) / 4) + 1
+    } else if ((thisMonth === 1 || thisMonth === 2 && todayDate < 29) && Number(inputMonth) > 2) {
+      return Math.floor((thisYear - Number(inputYear)) / 4)
+    }
+  // last year
+  } else if ((pastYr % 4 === 0 && pastYr % 100 !== 0) || (pastYr % 4 === 0 && pastYr % 100 === 0 && pastYr % 400 === 0)) {
+    if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+      return Math.floor(((thisYear - 1) - Number(inputYear)) / 4) + 1
     } else {
-      if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
-        return Math.floor(((thisYear - 3) - Number(inputYear)) / 4) + 1
-      } else {
-        return Math.floor(((thisYear - 3) - Number(inputYear)) / 4)
-      }
+      return Math.floor(((thisYear - 1) - Number(inputYear)) / 4)
+    }
+  // two years ago
+  } else if ((pastYrTwo % 4 === 0 && pastYrTwo % 100 !== 0) || (pastYrTwo % 4 === 0 && pastYrTwo % 100 === 0 && pastYrTwo % 400 === 0)) {
+    if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+      return Math.floor(((thisYear - 2) - Number(inputYear)) / 4) + 1
+    } else {
+      return Math.floor(((thisYear - 2) - Number(inputYear)) / 4)
+    }
+  // will be a Leap Year if not found already
+  } else {
+    if (Number(inputMonth) === 1 || Number(inputMonth) === 2 && inputDay <= 29) {
+      return Math.floor(((thisYear - 3) - Number(inputYear)) / 4) + 1
+    } else {
+      return Math.floor(((thisYear - 3) - Number(inputYear)) / 4)
     }
   }
-  getLeapDays(thisYear)
+}
+getLeapDays(thisYear)
+```
+
+#### Number Animation
+
+I took an extra hour after finalising the project to see if I could create the number results animation, which was a bonus part of the brief. I did this within [CodePen](https://codepen.io/adraf-the-sans/pen/KKYapGO) to get the basic functionality. I then turned this into a function as it would need to have three separate results fed into it and animate each of them separately. I also added an equation to make sure no matter how high the number, the numbers would all finish animating at the same time. It takes the total time (1 second) and divides it by the final number to give the `setTimeout` the amount of milliseconds it should take between incrementing numbers. With this working, I then transferred this to the project. The functions now run from the if...else statements, which are adding the results to the `innerHTML` for the user to see.
+
+```js
+function runAnimation(finalNum, targetResult) {
+  for (let i = 0; i <= finalNum; i++) {
+    setTimeout(
+      (function(i) {
+        return function() {        
+          const result = i
+          targetResult.innerHTML = result
+        }
+      })(i), i * (1000 / finalNum))
+  }
+}
+
+if (daysPassed >= 365 || Number(inputYear) < thisYear) {
+  // * Year
+  thisYear === Number(inputYear) ? yearResult.innerText = 0 : runAnimation(yearRes, yearResult)
+  ...
+}
 ```
 
 
